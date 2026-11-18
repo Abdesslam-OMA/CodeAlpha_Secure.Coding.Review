@@ -1,372 +1,58 @@
-# 🔐 Python Secure Coding Review
+<div align="center">
 
-### Identifying • Analyzing • Understanding • Remediating Security Vulnerabilities
+<!-- Header Banner / Title -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F172A,50:1E293B,100:0284C7&height=220&section=header&text=Python%20Secure%20Coding%20Review&fontSize=38&fontColor=F8FAFC&fontAlignY=38&desc=Static%20Application%20Security%20Testing%20(SAST)%20%26%20Manual%20Code%20Audit&descAlignY=58&descSize=16&animation=fadeIn" width="100%" />
 
-\<p align="center">
+<p align="center">
+  <img src="https://img.shields.io/badge/Assessment_Type-SAST_%2B_Manual_Audit-0284C7?style=for-the-badge&logo=shield&logoColor=white" alt="Assessment Type" />
+  <img src="https://img.shields.io/badge/Target_Runtime-Python_3.14.8-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Analyzer-Bandit_v1.9.4-DC2626?style=for-the-badge&logo=securityscorecard&logoColor=white" alt="Bandit" />
+  <img src="https://img.shields.io/badge/Environment-Kali_Linux-557C94?style=for-the-badge&logo=kalilinux&logoColor=white" alt="Kali Linux" />
+  <img src="https://img.shields.io/badge/Status-Baseline_Audit_Complete-16A34A?style=for-the-badge" alt="Status" />
+</p>
 
+<p align="center">
+  <a href="#-executive-summary">Executive Summary</a> •
+  <a href="#-assessment-environment--architecture">Environment</a> •
+  <a href="#-security-assessment-metrics">Metrics</a> •
+  <a href="#-vulnerability-findings">Findings</a> •
+  <a href="#-remediation-roadmap">Remediation</a> •
+  <a href="#-references--standards">References</a>
+</p>
 
-
-\
-
-
-\</p>
-
----
-
-## `01` — Project Overview
-
-This project demonstrates a practical **Secure Coding Review** of a deliberately vulnerable Python login application.
-
-The objective was to investigate common application security weaknesses through manual source code inspection and automated static analysis using **Bandit**.
-
-The assessment focused on identifying insecure password hashing, potentially vulnerable SQL query construction, and weaknesses in authentication and access control.
-
-Rather than simply writing functional code, this project explores the importance of developing applications with security as a fundamental requirement.
-
-> **Core Objective:** Identify security vulnerabilities, understand their potential impact, and recommend appropriate remediation techniques.
+</div>
 
 ---
 
-## `02` — Assessment Environment
+## 📋 Executive Summary
 
-| Component            | Description               |
-| :------------------- | :------------------------ |
-| Programming Language | Python 3.14.8             |
-| Database             | SQLite3                   |
-| Security Analyzer    | Bandit 1.9.4              |
-| Operating System     | Kali Linux                |
-| Assessment Method    | Manual Code Review + SAST |
-| Application Type     | Python Login System       |
+This repository documents a structured **Secure Coding Review** conducted against a baseline Python/SQLite authentication service (`main.py`). The engagement combined automated **Static Application Security Testing (SAST)** via **Bandit** with a **manual line-by-line architectural inspection** to uncover implementation flaws, cryptographic weaknesses, and authorization gaps.
 
-### Tools & Technologies
+> **Assessment Thesis:** Automated SAST tooling rapidly detects known insecure API sinks and broken cryptographic primitives, whereas manual source review is indispensable for uncovering business-logic and access-control vulnerabilities that exhibit valid syntax.
 
-- **Python:** Application development and source code analysis.
-- **SQLite3:** Database operations and user management.
-- **Bandit:** Automated Python security vulnerability detection.
-- **Kali Linux:** Security testing environment.
+### Key Audit Highlights
+* **Automated SAST Scan (`Bandit v1.9.4`):** Flagged **4 security findings** across 70 lines of source code (**2 High**, **2 Medium**) mapped to **CWE-327** and **CWE-89**.
+* **Manual Logic Audit:** Identified **1 Critical architectural vulnerability** (**CWE-284 — Improper Access Control**) allowing unauthenticated access to administrative database dumps—an issue completely invisible to syntax-level static analyzers.
 
 ---
 
-## `03` — Application Architecture
+## 🛠️ Assessment Environment & Architecture
 
-The application was developed as a basic user authentication system containing the following functionalities:
+### Engagement Specifications
 
-| Function            | Description                                |
-| :------------------ | :----------------------------------------- |
-| User Registration   | Creates new user accounts.                 |
-| Password Hashing    | Hashes passwords before database storage.  |
-| User Authentication | Checks submitted credentials.              |
-| SQLite Integration  | Stores and retrieves user information.     |
-| Admin Panel         | Provides access to database functionality. |
+| Parameter | Specification |
+| :--- | :--- |
+| **Target Application** | CLI User Authentication & Admin Management System (`main.py`) |
+| **Runtime & Engine** | Python `3.14.8` • SQLite3 Embedded Relational Database |
+| **SAST Tooling** | Bandit `1.9.4` (AST-based Python Security Linter) |
+| **Testing Host** | Kali Linux Security Workstation |
+| **Methodology** | Hybrid White-Box Audit (Automated SAST + Manual Code Inspection) |
+| **CWE / Standards Mapping** | MITRE CWE Top 25 • OWASP ASVS v4.0 • OWASP Cheat Sheet Series |
 
-### Project Structure
+### Repository Layout
 
 ```text
 secure-coding-review/
-│
-├── main.py
-│
-├── README.md
-│
-└── requirements.txt
-```
-
-The application was intentionally developed with insecure coding practices to provide a practical environment for security assessment.
-
----
-
-## `04` — Security Assessment Methodology
-
-The assessment was conducted using two complementary approaches.
-
-### A. Manual Source Code Inspection
-
-The application source code was inspected to identify potentially insecure implementations.
-
-Areas examined:
-
-- Password hashing mechanisms.
-- SQL query construction.
-- Authentication mechanisms.
-- Authorization controls.
-- Sensitive information exposure.
-- User input handling.
-
-### B. Static Application Security Testing (SAST)
-
-Bandit was used to automatically inspect the Python source code for common security weaknesses.
-
-**Command executed:**
-
-```bash
-bandit -r main.py
-```
-
-Bandit analyzed the application and generated a report containing vulnerability identifiers, severity ratings, confidence levels, affected code locations, and CWE references.
-
----
-
-## `05` — Security Assessment Results
-
-\<details>
-\<summary>\<strong>▼ View Security Assessment Summary\</strong>\</summary>
-
-| Metric          | Result |
-| :-------------- | -----: |
-| Lines of Code   |     70 |
-| Total Findings  |      4 |
-| High Severity   |      2 |
-| Medium Severity |      2 |
-| Low Severity    |      0 |
-| Files Skipped   |      0 |
-
-\</details>
-
-### Vulnerability Distribution
-
-| Severity  | Findings | Distribution |
-| :-------- | -------: | :----------- |
-| 🔴 High   |        2 | 50%          |
-| 🟠 Medium |        2 | 50%          |
-| 🟢 Low    |        0 | 0%           |
-
-### Overall Findings
-
-\<pre> HIGH      ██████████  2 MEDIUM    ██████████  2 LOW                   0  TOTAL FINDINGS: 4 \</pre>
-
-*Note: The distribution represents Bandit's four reported findings, not four unique root causes.*
-
----
-
-## `06` — Detailed Vulnerability Analysis
-
-### Finding 01 — Weak Cryptographic Hashing
-
-\<p> \<img src="[https://img.shields.io/badge/SEVERITY-HIGH-red?style=flat-square](https://img.shields.io/badge/SEVERITY-HIGH-red?style=flat-square)" /> \<img src="[https://img.shields.io/badge/CONFIDENCE-HIGH-red?style=flat-square](https://img.shields.io/badge/CONFIDENCE-HIGH-red?style=flat-square)" /> \<img src="[https://img.shields.io/badge/BANDIT-B324-blue?style=flat-square](https://img.shields.io/badge/BANDIT-B324-blue?style=flat-square)" /> \</p>
-
-**CWE-327 — Use of a Broken or Risky Cryptographic Algorithm**
-
-**Affected locations:** `main.py:25` and `main.py:53`
-
-**Description**
-
-The application uses the MD5 hashing algorithm to process user passwords during registration and authentication.
-
-MD5 is considered cryptographically broken and is unsuitable for password storage because it is extremely fast to calculate and does not provide the computational resistance required against modern password-cracking attacks.
-
-**Potential Impact**
-
-- Increased risk of password recovery if database hashes are exposed.
-- Greater susceptibility to dictionary and brute-force attacks.
-- Compromised user accounts.
-
-**Recommended Remediation**
-
-Replace MD5 with a dedicated password-hashing algorithm such as Argon2id or bcrypt.
-
----
-
-### Finding 02 — Potential SQL Injection in Registration
-
-\<p>
-\<img src="[https://img.shields.io/badge/SEVERITY-MEDIUM-orange?style=flat-square](https://img.shields.io/badge/SEVERITY-MEDIUM-orange?style=flat-square)" />
-\<img src="[https://img.shields.io/badge/CONFIDENCE-LOW-yellow?style=flat-square](https://img.shields.io/badge/CONFIDENCE-LOW-yellow?style=flat-square)" />
-\<img src="[https://img.shields.io/badge/BANDIT-B608-blue?style=flat-square](https://img.shields.io/badge/BANDIT-B608-blue?style=flat-square)" />
-\</p>
-
-**CWE-89 — SQL Injection**
-
-**Affected location:** `main.py:28`
-
-**Description**
-
-The registration function constructs SQL statements using Python f-strings.
-
-User-controlled input is directly inserted into the SQL query.
-
-This creates a potential SQL Injection vulnerability because specially crafted input may alter the intended SQL statement.
-
-**Potential Impact**
-
-- Unauthorized database operations.
-- Manipulation of database records.
-- Potential exposure of sensitive information.
-
-**Recommended Remediation**
-
-Use parameterized SQL statements to separate user input from executable SQL commands.
-
----
-
-### Finding 03 — Potential SQL Injection in Authentication
-
-\<p>
-\<img src="[https://img.shields.io/badge/SEVERITY-MEDIUM-orange?style=flat-square](https://img.shields.io/badge/SEVERITY-MEDIUM-orange?style=flat-square)" />
-\<img src="[https://img.shields.io/badge/CONFIDENCE-LOW-yellow?style=flat-square](https://img.shields.io/badge/CONFIDENCE-LOW-yellow?style=flat-square)" />
-\<img src="[https://img.shields.io/badge/BANDIT-B608-blue?style=flat-square](https://img.shields.io/badge/BANDIT-B608-blue?style=flat-square)" />
-\</p>
-
-**CWE-89 — SQL Injection**
-
-**Affected location:** `main.py:44`
-
-**Description**
-
-The login function uses string-based SQL query construction to retrieve user information.
-
-The username is inserted directly into the SQL statement instead of being passed as a parameter.
-
-**Potential Impact**
-
-An attacker may manipulate the database query and potentially bypass intended username filtering or access unauthorized records.
-
-**Recommended Remediation**
-
-Replace string interpolation with parameterized SQL queries.
-
----
-
-### Finding 04 — Weak Hashing During Password Verification
-
-\<p> \<img src="[https://img.shields.io/badge/SEVERITY-HIGH-red?style=flat-square](https://img.shields.io/badge/SEVERITY-HIGH-red?style=flat-square)" /> \<img src="[https://img.shields.io/badge/CONFIDENCE-HIGH-red?style=flat-square](https://img.shields.io/badge/CONFIDENCE-HIGH-red?style=flat-square)" /> \<img src="[https://img.shields.io/badge/BANDIT-B324-blue?style=flat-square](https://img.shields.io/badge/BANDIT-B324-blue?style=flat-square)" /> \</p>
-
-**CWE-327 — Use of a Broken or Risky Cryptographic Algorithm**
-
-**Affected location:** `main.py:53`
-
-**Description**
-
-The login functionality uses MD5 to calculate the hash of the submitted password before comparing it with the stored password hash.
-
-This continues the use of an insecure cryptographic algorithm throughout the authentication process.
-
-**Potential Impact**
-
-The application remains dependent on weak password hashing, making stored credentials more vulnerable if database information is compromised.
-
-**Recommended Remediation**
-
-Implement a secure password verification mechanism using Argon2id or bcrypt.
-
----
-
-## `07` — Additional Manual Review Finding
-
-### Missing Authentication and Authorization Controls
-
-**Detection Method:** Manual Code Inspection
-
-During the manual assessment, an additional security weakness was identified in the admin panel.
-
-The admin functionality can be accessed directly without checking whether the user is authenticated or has administrative privileges.
-
-**Potential Impact**
-
-- Unauthorized access to administrative functionality.
-- Exposure of database records.
-- Disclosure of stored password hashes.
-
-**Recommended Remediation**
-
-- Implement authentication before granting access to administrative functionality.
-- Introduce role-based access control (RBAC).
-- Restrict administrative actions to authorized users.
-- Never expose stored password hashes through application interfaces.
-
-**Important:** This finding was identified manually and was not included in Bandit's four reported findings.
-
----
-
-## `08` — Remediation Strategy
-
-The following security improvements are recommended:
-
-| Security Issue                | Recommended Solution                       |
-| :---------------------------- | :----------------------------------------- |
-| Weak MD5 hashing              | Implement Argon2id or bcrypt               |
-| SQL Injection in registration | Use parameterized queries                  |
-| SQL Injection in login        | Use parameterized queries                  |
-| Missing admin authentication  | Implement authentication and authorization |
-| Sensitive data exposure       | Restrict database information access       |
-
-### Example: Secure SQL Query
-
-**Vulnerable implementation:**
-
-```python
-query = f"""
-SELECT * FROM users
-WHERE username = '{username}'
-"""
-
-cursor.execute(query)
-```
-
-**Improved implementation:**
-
-```python
-query = """
-SELECT * FROM users
-WHERE username = ?
-"""
-
-cursor.execute(query, (username,))
-```
-
-Parameterized queries ensure that user input is treated as data rather than executable SQL syntax.
-
----
-
-## `09` — Key Learning Outcomes
-
-This assessment provided practical experience in:
-
-- Understanding common Python application vulnerabilities.
-- Identifying weak cryptographic implementations.
-- Recognizing potential SQL Injection vulnerabilities.
-- Using Bandit for static application security testing.
-- Interpreting vulnerability severity and confidence ratings.
-- Understanding CWE classifications.
-- Performing manual source code security reviews.
-- Applying secure coding principles.
-- Recommending appropriate remediation techniques.
-
-**Key Takeaway:**
-
-> Security is not an additional feature. It is a fundamental part of software development.
-
----
-
-## `10` — Conclusion
-
-The security assessment successfully identified four findings through automated static analysis and one additional security weakness through manual code inspection.
-
-The results demonstrated how seemingly simple implementation choices, such as password hashing and SQL query construction, can introduce significant security risks.
-
-The exercise also highlighted the importance of combining automated security tools with manual code review.
-
-Although Bandit provides valuable insights into potentially insecure coding patterns, it cannot independently identify every application-level security weakness.
-
-The next stage of this project is to implement the recommended security improvements, perform another assessment, and compare the results.
-
-**Assessment Status:** Initial security review completed. Remediation and retesting pending.
-
----
-
-## `11` — References & Resources
-
-- [Bandit Documentation](https://bandit.readthedocs.io/)
-- [CWE-327 — Risky Cryptographic Algorithm](https://cwe.mitre.org/data/definitions/327.html)
-- [CWE-89 — SQL Injection](https://cwe.mitre.org/data/definitions/89.html)
-- [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
-- [OWASP SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)
-
----
-
-\<p align="center">
-
-**PYTHON SECURE CODING REVIEW**
-
-*Learning to identify vulnerabilities. Understanding their impact. Building more secure applications.*
-
-\</p>
+├── main.py              # Target authentication & admin application (70 LOC)
+├── requirements.txt     # Environment & SAST dependencies (bandit, bcrypt)
+└── README.md            # Security assessment report & remediation blueprint
