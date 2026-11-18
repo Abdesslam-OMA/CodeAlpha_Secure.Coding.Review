@@ -240,11 +240,11 @@ elif choice == "3":
 
 ### Actionable Remediation Checklist
 
-- [x] **Phase 1: Static & Manual Audit.** Identify cryptographic, injection, and access-control weaknesses (`main.py`).
-- [ ] **Phase 2: Cryptographic Hardening.** Replace `hashlib.md5` with bcrypt (`gensalt()` + `checkpw()`).
-- [ ] **Phase 3: Query Parameterization.** Refactor all `cursor.execute()` calls to use `?` bind parameters.
-- [ ] **Phase 4: RBAC & Data Minimization.** Gate `admin_panel()` behind authenticated `is_admin` checks and omit password hashes from output.
-- [ ] **Phase 5: Verification Re-Scan.** Re-run `bandit -r main.py` to confirm 0 High/Medium findings.
+-  **Phase 1: Static & Manual Audit.** Identify cryptographic, injection, and access-control weaknesses (`main.py`).
+-  **Phase 2: Cryptographic Hardening.** Replace `hashlib.md5` with bcrypt (`gensalt()` + `checkpw()`).
+-  **Phase 3: Query Parameterization.** Refactor all `cursor.execute()` calls to use `?` bind parameters.
+-  **Phase 4: RBAC & Data Minimization.** Gate `admin_panel()` behind authenticated `is_admin` checks and omit password hashes from output.
+-  **Phase 5: Verification Re-Scan.** Re-run `bandit -r main.py` to confirm 0 High/Medium findings.
 
 ---
 
